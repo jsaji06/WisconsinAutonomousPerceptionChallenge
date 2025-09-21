@@ -17,19 +17,17 @@ The system tracks the ego-vehicle's trajectory by:
 - +Y: Right
 - +Z: Up
 
-### World Frame
-- Origin: Directly under traffic light on ground
-- +X: Aligned with initial car-traffic light line
-- +Y: Left (perpendicular to +X)
-- +Z: Up (since we are only worried about 2D trajectories, this is ignored)
-
 ## Algorithm
 
 1. **Data Collection**: Extract traffic light 3D positions from depth maps
-3. **Frame Alignment**: Rotate coordinates so initial traffic light position aligns with +X axis
-4. **World Transformation**: Convert to world frame (ego position = -traffic light position)
-5. **Origin Setting**: Set world origin at traffic light location
-6. **Visualization**: Plot trajectory in BEV format
+   - Iterate through each frame's traffic light bounding box data
+   - Calculate midpoint to identify proper indices to retrieve depth data per frame
+   - Retrieve and collect depth data of traffic light per frame
+2. **Frame Alignment**: Rotate coordinates so initial traffic light position aligns with +X axis
+   - Project onto the positive X axis since the car moves in that same direction (forward)
+   - Then rotate coordinates to convert to world frame
+3. **Visualization**: Plot trajectory in BEV format
+   - Using the newly calculated coordinates, create a scatterplot visual of the coordinates
 
 ## Output
 
