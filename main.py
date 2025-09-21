@@ -23,6 +23,7 @@ rgb_images = [os.path.join("./dataset/rgb", f) for f in rgb_files]
 # Collect traffic light positions in ego frame
 traffic_light_x = []
 traffic_light_y = []
+valid_frames = []
 
 for i, row in df.iterrows():
     x1 = row['x1']
@@ -48,6 +49,7 @@ for i, row in df.iterrows():
             if not np.isnan(x) and not np.isnan(y) and np.isfinite(x) and np.isfinite(y):
                 traffic_light_x.append(x)
                 traffic_light_y.append(y)
+                valid_frames.append(i)
 
 # Convert to world frame
 if len(traffic_light_x) > 0:
@@ -66,16 +68,16 @@ if len(traffic_light_x) > 0:
     # Set origin at traffic light
     ego_world = ego_world - ego_world[0]    
     
-    # Create proper BEV plot
+    # Create a BEV plot
     plt.figure(figsize=(10, 10))
     plt.plot(ego_world[:, 0], ego_world[:, 1], 'b-', linewidth=2, label='Ego Trajectory')
-    plt.scatter(ego_world[0, 0], ego_world[0, 1], color='green', s=100, label='Start', marker='o')
-    plt.scatter(ego_world[-1, 0], ego_world[-1, 1], color='red', s=100, label='End', marker='s')
-    plt.scatter(0, 0, color='orange', s=150, label='Traffic Light', marker='^')
+    plt.scatter(ego_world[0, 0], ego_world[0, 1], color='green', s=300, label='Start', marker='*', edgecolors='black', linewidth=2)
+    plt.scatter(ego_world[-1, 0], ego_world[-1, 1], color='red', s=100, label='End', marker='v')
+    plt.scatter(0, 0, color='orange', s=100, label='Traffic Light', marker='s')
     
-    # BEV formatting
-    plt.xlabel('X (meters)')
-    plt.ylabel('Y (meters)')
+    # Plot formatting
+    plt.xlabel('Forward (meters)')
+    plt.ylabel('Lateral (meters)')
     plt.title('Bird\'s Eye View - Ego Vehicle Trajectory')
     plt.legend()
     plt.grid(True, alpha=0.3)
